@@ -312,6 +312,9 @@ jobs:
     - name: Install V
       if: matrix.type == 'v'
       uses: vlang/setup-v@v1.4
+      with:
+        # Pinned: V master currently fails to build on Linux (unknown type DWORD)
+        version: '0.5.2'
 
     # C++ Setup (pinned clang-format via PyPI wheel — apt patch versions drift)
     - name: Install clang-format and cppcheck
