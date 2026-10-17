@@ -311,7 +311,13 @@ jobs:
     # V (Vlang) Setup (no check-latest — master drift breaks fmt parity)
     - name: Install V
       if: matrix.type == 'v'
-      uses: vlang/setup-v@v1.4
+      # Prebuilt release binary: building V from source pulls the latest vlang/vc
+      # bootstrap, which currently fails on Linux (unknown type DWORD)
+      run: |
+        curl -fsSL -o "$RUNNER_TEMP/v_linux.zip" https://github.com/vlang/v/releases/download/0.5.2/v_linux.zip
+        unzip -q "$RUNNER_TEMP/v_linux.zip" -d "$RUNNER_TEMP"
+        echo "$RUNNER_TEMP/v" >> "$GITHUB_PATH"
+        "$RUNNER_TEMP/v/v" version
 
     # C++ Setup (pinned clang-format via PyPI wheel — apt patch versions drift)
     - name: Install clang-format and cppcheck
